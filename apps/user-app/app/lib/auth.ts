@@ -5,7 +5,6 @@ import { JWT } from "next-auth/jwt";
 import { Session } from "next-auth";
 import { NextAuthOptions } from "next-auth";
 import { z } from "zod";
-import { cookies } from "next/headers";
 
 // zod schema for validation
 const CredentialsSchema = z.object({
@@ -26,16 +25,16 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "text",
-          placeholder: "example@gmail.com",
-          required: true,
-        },
         phone: {
           label: "Phone number",
           type: "text",
           placeholder: "1231231231",
+          required: true,
+        },
+        email: {
+          label: "Email",
+          type: "text",
+          placeholder: "example@gmail.com",
           required: true,
         },
         password: { label: "Password", type: "password", required: true },
@@ -108,6 +107,14 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.sub as string;
       }
       return session;
+    },
+
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+        token.email = user.email;
+      }
+      return token;
     },
   },
 };

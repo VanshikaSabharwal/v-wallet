@@ -1,23 +1,42 @@
 import express from "express";
 import db from "@repo/db/client";
-const app = express();
+import { z } from "zod";
 
+const app = express();
+const PORT = process.env.PORT || 3003;
 app.use(express.json());
+
+// zod schema
+const paymentInformationSchema = z.object({
+  token: z.string(),
+  userId: z.string(),
+  amount: z.string(),
+});
 
 app.post("/hdfcWebhook", async (req, res) => {
   //TODO: Add zod validation here?
   //TODO: HDFC bank should ideally send us a secret so we know this is sent by them
-  const paymentInformation: {
-    token: string;
-    userId: string;
-    amount: string;
-  } = {
-    token: req.body.token,
-    userId: req.body.user_identifier,
-    amount: req.body.amount,
-  };
+  const validation = paymentInformationSchema.safeParse(req.body);
+  if (!validation.success) {
+    return res.status(400).json({
+      message: "Invalid data format",
+      errors: validation.error.errors,
+    });
+  }
+
+  const paymentInformation = validation.data;
 
   try {
+    // ensure user exists
+    const userExists = await db.user.findUnique({
+      where: { id: Number(paymentInformation.userId) },
+    });
+    if (!userExists) {
+      return res.status(400).json({
+        message: "User does not exist",
+      });
+    }
+
     await db.$transaction([
       db.balance.updateMany({
         where: {
@@ -51,4 +70,6 @@ app.post("/hdfcWebhook", async (req, res) => {
   }
 });
 
-app.listen(3003);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

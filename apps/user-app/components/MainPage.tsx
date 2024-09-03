@@ -6,7 +6,7 @@ const MainPage = () => {
     <div>
       <SideBar title="Transfer" href="/transfer" icon="" />
       <SideBar title="Transactions" href="/transactions" icon="" />
-      <SideBar title="P2P" href="/p2p" icon="" />
+      <SideBar title="P2P" href="/peer" icon="" />
     </div>
   );
 };

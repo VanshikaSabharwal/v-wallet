@@ -1,8 +1,8 @@
 import { Button } from "./button";
+import { User } from "next-auth";
 
 interface AppbarProps {
-  user: any;
-  // TODO: can u figure out what the type should be here?
+  user: User | null;
   onSignin: () => void;
   onSignout: () => void;
 }

@@ -11,9 +11,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@repo/db": "*",
     "@types/express": "^4.17.21",
     "esbuild": "^0.23.1",
     "express": "^4.19.2",
-    "@repo/db": "*"
+    "zod": "^3.23.8"
   }
 }
