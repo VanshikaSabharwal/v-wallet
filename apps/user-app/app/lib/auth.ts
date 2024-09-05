@@ -116,5 +116,9 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
+
+    async redirect({ url, baseUrl }) {
+      return baseUrl;
+    },
   },
 };

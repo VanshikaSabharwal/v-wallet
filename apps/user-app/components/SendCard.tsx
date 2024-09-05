@@ -13,6 +13,7 @@ export function SendCard() {
   return (
     <div className="h-[90vh]">
       <Center>
+        <h1>Transfer to your Friend</h1>
         <Card title="Send">
           <div className="min-w-72 pt-2">
             <TextInput

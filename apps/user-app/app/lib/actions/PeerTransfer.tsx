@@ -23,7 +23,7 @@ export async function peerTransfer(to: string, amount: number) {
   }
 
   await prisma.$transaction(async (tx) => {
-    await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${Number(from)} FROM UPDATE`;
+    await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${Number(from)} `;
     const fromBalance = await tx.balance.findUnique({
       where: { userId: Number(from) },
     });

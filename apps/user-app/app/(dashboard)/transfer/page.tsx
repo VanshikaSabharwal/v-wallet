@@ -39,7 +39,7 @@ export default async function () {
 
   return (
     <div className="w-screen">
-      <div className="text-4xl pt-8 mb-8 font-bold text-[#6a51a6]">
+      <div className="text-align text-4xl pt-8 mb-8 font-bold text-[#6a51a6]">
         Transfer
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 p-4">
@@ -49,7 +49,11 @@ export default async function () {
         <div>
           <BalanceCard amount={balance.amount} locked={balance.locked} />
           <div className="pt-4">
-            <OnRampTransactions transactions={transactions} />
+            {transactions.length > 0 ? (
+              <OnRampTransactions transactions={transactions} />
+            ) : (
+              <p>No transactions available.</p>
+            )}
           </div>
         </div>
       </div>

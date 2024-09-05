@@ -9,7 +9,7 @@ interface AppbarProps {
 
 export const Appbar = ({ user, onSignin, onSignout }: AppbarProps) => {
   return (
-    <div className="flex justify-between border-b px-4">
+    <div className="flex justify-between border-b px-4  bg-gray-300">
       <a className="text-lg flex flex-col justify-center" href="/dashboard">
         V Wallet
       </a>
