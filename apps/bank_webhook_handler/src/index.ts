@@ -1,5 +1,5 @@
 import express from "express";
-import prisma from "@repo/db/client";
+import db from "@repo/db/client";
 import { z } from "zod";
 
 const app = express();
@@ -28,7 +28,7 @@ app.post("/hdfcWebhook", async (req, res) => {
 
   try {
     // ensure user exists
-    const userExists = await prisma.user.findUnique({
+    const userExists = await db.user.findUnique({
       where: { id: Number(paymentInformation.userId) },
     });
     if (!userExists) {
@@ -37,8 +37,8 @@ app.post("/hdfcWebhook", async (req, res) => {
       });
     }
 
-    await prisma.$transaction([
-      prisma.balance.updateMany({
+    await db.$transaction([
+      db.balance.updateMany({
         where: {
           userId: Number(paymentInformation.userId),
         },
@@ -49,7 +49,7 @@ app.post("/hdfcWebhook", async (req, res) => {
           },
         },
       }),
-      prisma.onRampTransaction.updateMany({
+      db.onRampTransaction.updateMany({
         where: {
           token: paymentInformation.token,
         },
