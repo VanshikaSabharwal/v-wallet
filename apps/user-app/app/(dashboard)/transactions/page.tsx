@@ -37,7 +37,7 @@ async function getPeerTransaction() {
   return transactions.map((t) => ({
     time: t.timestamp,
     amount: t.amount,
-    toUserId: t.toUserId,
+    // toUserId: t.toUserId,
   }));
 }
 
@@ -62,7 +62,10 @@ export default async function () {
           <div className="peerTransactions">
             <h1>Peer Transaction History</h1>
             {peerTransaction.length > 0 ? (
-              <PeerTransactions transactions={peerTransaction} />
+              <div>
+                <h1>hello</h1>
+                <PeerTransactions transactions={peerTransaction} />
+              </div>
             ) : (
               <p>No Transaction Available</p>
             )}

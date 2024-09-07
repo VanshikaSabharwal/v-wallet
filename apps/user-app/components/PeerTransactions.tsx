@@ -6,7 +6,7 @@ export const PeerTransactions = ({
   transactions: {
     time: Date;
     amount: number;
-    toUserId: number;
+    // toUserId: number;
   }[];
 }) => {
   if (!transactions.length) {
@@ -31,7 +31,7 @@ export const PeerTransactions = ({
               + Rs {txn.amount / 100}
             </div>
             <div className="receivedFrom">
-              <div className="text-sm">{txn.toUserId}</div>
+              {/* <div className="text-sm">{txn.toUserId}</div> */}
             </div>
           </div>
         ))}
