@@ -36,10 +36,40 @@ export async function createOnRampTransaction(
         token,
         userId: Number(session.user.id),
         amount: amount * 100, // Convert to smallest currency unit (e.g., cents)
-        status: "Processing",
+        status: "Success",
         startTime: new Date(),
       },
     });
+
+    // Get current balance to update
+    const balance = await prisma.balance.findUnique({
+      where: {
+        userId: Number(session.user.id),
+      },
+    });
+
+    if (balance) {
+      await prisma.balance.update({
+        where: {
+          userId: Number(session.user.id), // Find balance record by userId
+        },
+        data: {
+          amount: {
+            increment: amount * 100, // Increment balance amount
+          },
+          locked: balance.locked, // Include other fields as needed
+        },
+      });
+    } else {
+      // Optionally handle the case where the balance record does not exist
+      await prisma.balance.create({
+        data: {
+          userId: Number(session.user.id),
+          amount: amount * 100,
+          locked: 0, // Initialize locked value or handle as needed
+        },
+      });
+    }
 
     return {
       message: "Transaction Done",

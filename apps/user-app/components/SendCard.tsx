@@ -9,6 +9,7 @@ import { peerTransfer } from "../app/lib/actions/PeerTransfer";
 export function SendCard() {
   const [number, setNumber] = useState("");
   const [amount, setAmount] = useState("");
+  const [message, setMessage] = useState("");
 
   return (
     <div className="h-[90vh]">
@@ -33,12 +34,21 @@ export function SendCard() {
             <div className="pt-4 flex justify-center">
               <Button
                 onClick={async () => {
-                  await peerTransfer(number, Number(amount) * 100);
+                  const response = await peerTransfer(
+                    number,
+                    Number(amount) * 100
+                  );
+                  setMessage(response.message);
                 }}
               >
                 Send
               </Button>
             </div>
+            {message && (
+              <div className="pt-4 text-center">
+                <p>{message}</p>
+              </div>
+            )}
           </div>
         </Card>
       </Center>

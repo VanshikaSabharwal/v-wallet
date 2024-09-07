@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { OnRampTransactions } from "../../../components/OnRampTransactions";
 import { authOptions } from "../../lib/auth";
 import prisma from "@repo/db/client";
+import { PeerTransactions } from "../../../components/PeerTransactions";
 
 async function getSelfTransaction() {
   const session = await getServerSession(authOptions);
@@ -19,8 +20,30 @@ async function getSelfTransaction() {
   }));
 }
 
+async function getPeerTransaction() {
+  const session = await getServerSession(authOptions);
+  const transactions = await prisma.p2pTransfer.findMany({
+    where: {
+      OR: [
+        {
+          fromUserId: Number(session?.user?.id),
+        },
+        {
+          toUserId: Number(session?.user?.id),
+        },
+      ],
+    },
+  });
+  return transactions.map((t) => ({
+    time: t.timestamp,
+    amount: t.amount,
+    toUserId: t.toUserId,
+  }));
+}
+
 export default async function () {
   const selfTransaction = await getSelfTransaction();
+  const peerTransaction = await getPeerTransaction();
   return (
     <div>
       <div className="w-screen">
@@ -36,7 +59,14 @@ export default async function () {
               <p>No Transaction Available</p>
             )}
           </div>
-          <div className="peerTransactions"></div>
+          <div className="peerTransactions">
+            <h1>Peer Transaction History</h1>
+            {peerTransaction.length > 0 ? (
+              <PeerTransactions transactions={peerTransaction} />
+            ) : (
+              <p>No Transaction Available</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
