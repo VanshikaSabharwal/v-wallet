@@ -1,5 +1,8 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "scripts": {
+    "build": "turbo run build --filter=web"
+  },
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
