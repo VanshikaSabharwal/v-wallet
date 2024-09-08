@@ -3,7 +3,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import prisma from "@repo/db/client";
-import { Prisma } from "@prisma/client"; // Import Prisma types
+import { PrismaClient, Prisma } from "@prisma/client";
 
 export async function peerTransfer(to: string, amount: number) {
   const session = await getServerSession(authOptions);
@@ -14,6 +14,7 @@ export async function peerTransfer(to: string, amount: number) {
     };
   }
 
+  // Fetch the recipient user only if needed
   const toUser = await prisma.user.findFirst({
     where: {
       number: to,
@@ -26,8 +27,9 @@ export async function peerTransfer(to: string, amount: number) {
   }
 
   try {
+    // Use a single transaction block to manage all related operations
+
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      // Specify the type here
       await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${Number(from)}`;
       const fromBalance = await tx.balance.findUnique({
         where: { userId: Number(from) },
@@ -44,6 +46,7 @@ export async function peerTransfer(to: string, amount: number) {
         data: { amount: { decrement: amount } },
       });
 
+      // Ensure recipient's balance record exists
       let toBalance = await tx.balance.findUnique({
         where: { userId: toUser.id },
       });
