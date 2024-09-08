@@ -12,12 +12,19 @@ async function getSelfTransaction() {
       userId: Number(session?.user?.id),
     },
   });
-  return transactions.map((t) => ({
-    time: t.startTime,
-    amount: t.amount,
-    status: t.status,
-    provider: t.provider,
-  }));
+  return transactions.map(
+    (t: {
+      startTime: Date;
+      amount: number;
+      status: string;
+      provider: string;
+    }) => ({
+      time: t.startTime,
+      amount: t.amount,
+      status: t.status,
+      provider: t.provider,
+    })
+  );
 }
 
 async function getPeerTransaction() {
