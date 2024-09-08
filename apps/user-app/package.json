@@ -7,7 +7,7 @@
     "build": "npm run db:generate && next build",
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
-    "db:generate": "npx prisma generate"
+    "db:generate": "npx prisma generate --schema=../../packages/db/prisma/schema.prisma"
   },
   "dependencies": {
     "@repo/store": "*",
