@@ -1,84 +1,137 @@
-"use server";
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth";
-import prisma from "@repo/db/client";
-import { Prisma } from "@prisma/client"; // Import Prisma types
+export default function SignUpForm() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
 
-export async function peerTransfer(to: string, amount: number) {
-  const session = await getServerSession(authOptions);
-  const from = session?.user?.id;
-  if (!from) {
-    return {
-      message: "Error while Sending",
-    };
-  }
-
-  const toUser = await prisma.user.findFirst({
-    where: {
-      number: to,
-    },
-  });
-  if (!toUser) {
-    return {
-      message: "User not found",
-    };
-  }
-
-  try {
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      // Specify the type here
-      await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${Number(from)}`;
-      const fromBalance = await tx.balance.findUnique({
-        where: { userId: Number(from) },
-      });
-      if (!fromBalance) {
-        throw new Error("Sender's balance record not found");
-      }
-      if (fromBalance.amount < amount) {
-        throw new Error("Insufficient funds");
-      }
-
-      await tx.balance.update({
-        where: { userId: Number(from) },
-        data: { amount: { decrement: amount } },
-      });
-
-      let toBalance = await tx.balance.findUnique({
-        where: { userId: toUser.id },
-      });
-      if (!toBalance) {
-        await tx.balance.create({
-          data: {
-            userId: toUser.id,
-            amount,
-            locked: 0,
-          },
-        });
-      } else {
-        await tx.balance.update({
-          where: { userId: toUser.id },
-          data: { amount: { increment: amount } },
-        });
-      }
-
-      await tx.p2pTransfer.create({
-        data: {
-          fromUserId: Number(from),
-          toUserId: toUser.id,
-          amount,
-          timestamp: new Date(),
+  const handleSendOtp = async () => {
+    try {
+      const response = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ email, phone }),
       });
-    });
 
-    return {
-      message: "Transfer successful",
-    };
-  } catch (error) {
-    console.error("Error during peer transfer:", error);
-    return {
-      message: "Failed to complete transfer",
-    };
-  }
+      if (response.ok) {
+        setIsOtpSent(true);
+      } else {
+        alert("Failed to send OTP");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, phone, password, otp }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("User created successfully");
+        router.push("/");
+      } else {
+        alert(result.error);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <form
+      onSubmit={handleSignUp}
+      className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md"
+    >
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+        Sign Up
+      </h1>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-2">Email</label>
+        <input
+          type="email"
+          placeholder="example@gmail.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-2">
+          Phone Number
+        </label>
+        <input
+          type="text"
+          placeholder="1231231231"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-2">Password</label>
+        <input
+          type="password"
+          placeholder="********"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+      </div>
+
+      {isOtpSent && (
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">OTP</label>
+          <input
+            type="text"
+            placeholder="Enter OTP"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+          />
+        </div>
+      )}
+
+      {!isOtpSent ? (
+        <button
+          type="button"
+          onClick={handleSendOtp}
+          className="w-full px-4 py-2 text-white bg-pink-500 rounded-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-400 transition duration-300"
+        >
+          Send OTP
+        </button>
+      ) : (
+        <button
+          type="submit"
+          className="w-full px-4 py-2 text-white bg-purple-500 rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 transition duration-300"
+        >
+          Sign Up
+        </button>
+      )}
+    </form>
+  );
 }
