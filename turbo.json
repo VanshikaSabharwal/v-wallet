@@ -3,7 +3,7 @@
 
   "pipeline": {
     "build": {
-      "commands": ["npx turbo run build"],
+      "command": ["npx turbo run build"],
       "dependsOn": ["^build"],
       "outputs": [".next/**", "dist/**"]
     },
