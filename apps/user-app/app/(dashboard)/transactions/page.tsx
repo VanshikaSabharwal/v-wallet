@@ -34,7 +34,7 @@ async function getPeerTransaction() {
       ],
     },
   });
-  return transactions.map((t) => ({
+  return transactions.map((t: { timestamp: Date; amount: number }) => ({
     time: t.timestamp,
     amount: t.amount,
     // toUserId: t.toUserId,
