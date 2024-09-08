@@ -4,7 +4,7 @@ import { Card } from "@repo/ui/card";
 import { TextInput } from "@repo/ui/textinput";
 import { Select } from "@repo/ui/select";
 import { Button } from "@repo/ui/button";
-import { createOnRampTransaction } from "../app/lib/actions/createOnRampTransaction";
+import { createOnRampTransaction } from "../app/lib/actions/CreateOnRampTransaction";
 import toast, { Toaster } from "react-hot-toast";
 
 // List of supported banks
