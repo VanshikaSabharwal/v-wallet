@@ -49,7 +49,6 @@ export async function POST(request: Request) {
   }
 
   try {
-    const otp = await sendOtp(email, phone, ""); // OTP is generated and sent by `sendOtp`
     return NextResponse.json(
       { message: "OTP sent successfully" },
       { status: 200 }
