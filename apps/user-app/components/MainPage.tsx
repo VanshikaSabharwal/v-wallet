@@ -1,11 +1,7 @@
 import React from "react";
 import { SideBar } from "./SideBar";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../app/lib/auth";
 
 const MainPage = async () => {
-  const session = await getServerSession(authOptions);
-
   return (
     <div>
       <h1 className="text-lg">Welcome to V Wallet !</h1>
