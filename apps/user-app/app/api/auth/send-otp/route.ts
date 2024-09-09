@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Function to send OTP via email
-async function sendOtp(email: string, phone: string, otp: string) {
+async function sendOtp(email: string, phone: string) {
   // Generate a 6-digit OTP
   const otpNum = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -25,21 +25,40 @@ async function sendOtp(email: string, phone: string, otp: string) {
   });
 
   // Store OTP in the database with expiration time
-  await db.otp.create({
-    data: {
-      phone,
-      email,
-      otp: otpNum,
-      expiresAt: new Date(Date.now() + 10 * 60 * 1000), // Expires OTP in 10 minutes
-    },
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // Expires OTP in 10 minutes
+
+  // Check if OTP already exists for the email/phone
+  const existingOtp = await db.otp.findFirst({
+    where: { phone, email },
   });
+
+  if (existingOtp) {
+    // Update the existing OTP
+    await db.otp.update({
+      where: { id: existingOtp.id },
+      data: {
+        otp: otpNum,
+        expiresAt,
+      },
+    });
+  } else {
+    // Create new OTP record
+    await db.otp.create({
+      data: {
+        phone,
+        email,
+        otp: otpNum,
+        expiresAt,
+      },
+    });
+  }
 
   return otpNum;
 }
 
 // Named export for POST requests
 export async function POST(request: Request) {
-  const { email, phone } = await request.json();
+  const { email, phone, action } = await request.json();
 
   if (!email || !phone) {
     return NextResponse.json(
@@ -49,10 +68,37 @@ export async function POST(request: Request) {
   }
 
   try {
-    return NextResponse.json(
-      { message: "OTP sent successfully" },
-      { status: 200 }
-    );
+    // Action to send or resend OTP
+    if (action === "resend") {
+      // Handle resend OTP logic
+      const existingOtp = await db.otp.findFirst({
+        where: { phone, email },
+      });
+
+      if (existingOtp) {
+        // Check if existing OTP is still valid (not expired)
+        if (existingOtp.expiresAt > new Date()) {
+          return NextResponse.json(
+            { message: "OTP is still valid. Please use the existing one." },
+            { status: 200 }
+          );
+        }
+      }
+
+      // If expired, send a new OTP
+      await sendOtp(email, phone);
+      return NextResponse.json(
+        { message: "OTP resent successfully" },
+        { status: 200 }
+      );
+    } else {
+      // Send OTP for the first time or if not a resend request
+      await sendOtp(email, phone);
+      return NextResponse.json(
+        { message: "OTP sent successfully" },
+        { status: 200 }
+      );
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.json(

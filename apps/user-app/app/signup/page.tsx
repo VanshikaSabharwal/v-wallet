@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { GrPowerCycle } from "react-icons/gr";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -22,8 +24,30 @@ export default function SignUpForm() {
 
       if (response.ok) {
         setIsOtpSent(true);
+        toast.success("OTP sent successfully");
       } else {
-        alert("Failed to send OTP");
+        toast.success("Failed to send OTP");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    console.log("Resend OTP");
+    try {
+      const response = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, phone }),
+      });
+      if (response.ok) {
+        setIsOtpSent(true);
+        toast.success("OTP sent again successfully");
+      } else {
+        toast.error("Failed to send OTP");
       }
     } catch (error) {
       console.error(error);
@@ -45,10 +69,10 @@ export default function SignUpForm() {
       const result = await response.json();
 
       if (response.ok) {
-        alert("User created successfully");
+        toast.success("User Created Successfully. Please Login now");
         router.push("/");
       } else {
-        alert(result.error);
+        toast.error(result.error);
       }
     } catch (error) {
       console.error(error);
@@ -105,14 +129,23 @@ export default function SignUpForm() {
       {isOtpSent && (
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-2">OTP</label>
-          <input
-            type="text"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
-          />
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+            />
+            <button
+              type="button"
+              onClick={handleResendOtp}
+              className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            >
+              <GrPowerCycle />
+            </button>
+          </div>
         </div>
       )}
 
