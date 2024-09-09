@@ -57,7 +57,6 @@ export const authOptions: NextAuthOptions = {
         const existingUser = await db.user.findFirst({
           where: {
             email,
-            number: phone,
           },
         });
 
