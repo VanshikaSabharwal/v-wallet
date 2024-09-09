@@ -3,6 +3,32 @@ import { OnRampTransactions } from "../../../components/OnRampTransactions";
 import { authOptions } from "../../lib/auth";
 import prisma from "@repo/db/client";
 import { PeerTransactions } from "../../../components/PeerTransactions";
+import BackArrow from "../../../components/BackArrow"; // Adjust the import path as needed
+
+type PeerTransaction = {
+  time: Date;
+  amount: number;
+  type: "sent" | "received";
+  user: {
+    id: number;
+    name: string | null;
+  };
+};
+
+interface PeerTransactionType {
+  timestamp: Date;
+  amount: number;
+  fromUserId: number;
+  fromUser: {
+    id: number;
+    name: string | null;
+  };
+  toUserId: number;
+  toUser: {
+    id: number;
+    name: string | null;
+  };
+}
 
 async function getSelfTransaction() {
   const session = await getServerSession(authOptions);
@@ -27,8 +53,10 @@ async function getSelfTransaction() {
   );
 }
 
-async function getPeerTransaction() {
+async function getPeerTransaction(): Promise<PeerTransaction[]> {
   const session = await getServerSession(authOptions);
+  const userId = Number(session?.user?.id);
+
   const transactions = await prisma.p2pTransfer.findMany({
     where: {
       OR: [
@@ -40,26 +68,34 @@ async function getPeerTransaction() {
         },
       ],
     },
+    include: {
+      fromUser: true,
+      toUser: true,
+    },
   });
-  return transactions.map((t: { timestamp: Date; amount: number }) => ({
+  return transactions.map((t: PeerTransactionType) => ({
     time: t.timestamp,
     amount: t.amount,
-    // toUserId: t.toUserId,
+    type: t.fromUserId === userId ? "sent" : "received",
+    user: t.fromUserId === userId ? t.toUser : t.fromUser,
   }));
 }
 
-export default async function () {
+export default async function TransactionsPage() {
   const selfTransaction = await getSelfTransaction();
   const peerTransaction = await getPeerTransaction();
   return (
-    <div>
+    <div className="relative">
+      <BackArrow /> {/* Added the BackArrow component */}
       <div className="w-screen">
-        <div className="text-4xl pt-8 mb-8 font-bold text-[#6a51a6]">
+        <div className="text-4xl pt-16 mb-4 font-bold text-[#6a51a6]">
           Transactions
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 p-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 p-2">
           <div className="selfTransfer">
-            <h1>Self Transactions History</h1>
+            <h1 className="text-xl font-semibold mb-4">
+              Self Transactions History
+            </h1>
             {selfTransaction.length > 0 ? (
               <OnRampTransactions transactions={selfTransaction} />
             ) : (
@@ -67,12 +103,11 @@ export default async function () {
             )}
           </div>
           <div className="peerTransactions">
-            <h1>Peer Transaction History</h1>
+            <h1 className="text-xl font-semibold mb-4">
+              Peer Transaction History
+            </h1>
             {peerTransaction.length > 0 ? (
-              <div>
-                <h1>hello</h1>
-                <PeerTransactions transactions={peerTransaction} />
-              </div>
+              <PeerTransactions transactions={peerTransaction} />
             ) : (
               <p>No Transaction Available</p>
             )}

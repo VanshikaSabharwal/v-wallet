@@ -28,7 +28,7 @@ export const OnRampTransactions = ({
                 {txn.time.toDateString()}
               </div>
             </div>
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center text-green-600">
               + Rs {txn.amount / 100}
             </div>
           </div>

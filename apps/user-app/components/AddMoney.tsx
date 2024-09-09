@@ -30,16 +30,18 @@ const AddMoney = () => {
   const handleAddMoney = async () => {
     try {
       // Show loading notification
-      toast.loading("Processing your transaction...");
+      const id = toast.loading("Processing your Transaction....");
 
       // Perform the transaction
       await createOnRampTransaction(provider, value);
 
+      // Redirect the user
+      window.location.href = redirectUrl || "";
+
       // Show success notification
       toast.success("Money added successfully!");
 
-      // Redirect the user
-      window.location.href = redirectUrl || "";
+      toast.dismiss(id);
     } catch (error) {
       // Show error notification
       toast.error("An error occurred while adding money.");

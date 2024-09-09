@@ -1,11 +1,11 @@
 "use client";
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
-import { Center } from "@repo/ui/center";
 import { TextInput } from "@repo/ui/textinput";
 import { useState } from "react";
 import { peerTransfer } from "../app/lib/actions/PeerTransfer";
 import toast, { Toaster } from "react-hot-toast";
+import BackArrow from "../components/BackArrow"; // Import your BackArrow component
 
 export function SendCard() {
   const [number, setNumber] = useState("");
@@ -14,25 +14,36 @@ export function SendCard() {
 
   const handleSend = async () => {
     try {
-      // Show loading notification
-      toast.loading("Processing your transfer...");
+      // Show loading notification and store its ID
+      const id = toast.loading("Processing your transfer...");
 
       // Perform the peer transfer
       const response = await peerTransfer(number, Number(amount) * 100);
+      console.log("Peer transfer response:", response);
 
       // Show success notification
       toast.success("Transfer successful!");
-      setMessage(response.message);
+
+      toast.dismiss(id);
     } catch (error) {
       // Show error notification
       toast.error("An error occurred while processing the transfer.");
+      console.error("Error occurred:", error);
     }
   };
 
   return (
-    <div className="h-[90vh]">
-      <Center>
-        <h1>Transfer to your Friend</h1>
+    <div className="relative h-[90vh] flex items-center justify-center flex-col px-4">
+      {/* Back Arrow positioned at the top-left corner, away from the center */}
+      <div className="absolute top-4 left-4">
+        <BackArrow />
+      </div>
+
+      <div className="flex flex-col items-center">
+        {/* Heading centered above the card */}
+        <h1 className="text-2xl font-bold mb-4">Transfer to your Friend</h1>
+
+        {/* Card for transfer details */}
         <Card title="Send">
           <div className="min-w-72 pt-2">
             <TextInput
@@ -55,7 +66,8 @@ export function SendCard() {
             )}
           </div>
         </Card>
-      </Center>
+      </div>
+
       <Toaster />
     </div>
   );

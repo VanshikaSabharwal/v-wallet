@@ -6,7 +6,11 @@ export const PeerTransactions = ({
   transactions: {
     time: Date;
     amount: number;
-    // toUserId: number;
+    type: "sent" | "received"; // Add this type to distinguish between sent and received transactions
+    user: {
+      id: number;
+      name: string | null;
+    };
   }[];
 }) => {
   if (!transactions.length) {
@@ -16,22 +20,32 @@ export const PeerTransactions = ({
       </Card>
     );
   }
+
   return (
     <Card title="Recent Transactions">
       <div className="pt-2">
-        {transactions.map((txn) => (
-          <div className="flex justify-between">
+        {transactions.map((txn, index) => (
+          <div key={index} className="flex justify-between">
             <div>
-              <div className="text-sm">Received INR</div>
+              <div className="text-sm">
+                {txn.type === "received" ? "Received" : "Sent"} INR
+              </div>
               <div className="text-slate-600 text-xs">
                 {txn.time.toDateString()}
               </div>
             </div>
             <div className="flex flex-col justify-center">
-              + Rs {txn.amount / 100}
+              <span
+                className={`text-lg font-semibold ${txn.type === "received" ? "text-green-600" : "text-red-600"}`}
+              >
+                {txn.type === "received"
+                  ? `+ Rs ${txn.amount / 100}`
+                  : `- Rs ${txn.amount / 100}`}
+              </span>
             </div>
             <div className="receivedFrom">
-              {/* <div className="text-sm">{txn.toUserId}</div> */}
+              {/* If needed, display the name of the user involved in the transaction */}
+              <div className="text-sm">{txn.user.name}</div>
             </div>
           </div>
         ))}

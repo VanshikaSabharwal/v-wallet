@@ -1,3 +1,4 @@
+import BackArrow from "../../../components/BackArrow";
 import { SendCard } from "../../../components/SendCard";
 
 // async function getPeerTransaction() {
@@ -12,7 +13,7 @@ import { SendCard } from "../../../components/SendCard";
 export default async function () {
   // const peerTransaction = await getPeerTransaction();
   return (
-    <div className="w-full">
+    <div className="relative min-h-screen flex flex-col items-center justify-center">
       <SendCard />
     </div>
   );
