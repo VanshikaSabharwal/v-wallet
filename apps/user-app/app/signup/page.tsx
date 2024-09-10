@@ -45,7 +45,7 @@ export default function SignUpForm() {
       });
       if (response.ok) {
         setIsOtpSent(true);
-        toast.success("OTP sent again successfully");
+        toast.success("OTP sent Again !");
       } else {
         toast.error("Failed to send OTP");
       }
