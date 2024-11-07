@@ -25,16 +25,16 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        phone: {
-          label: "Phone number",
-          type: "text",
-          placeholder: "1231231231",
-          required: true,
-        },
         email: {
           label: "Email",
           type: "text",
           placeholder: "example@gmail.com",
+          required: true,
+        },
+        phone: {
+          label: "Phone number",
+          type: "text",
+          placeholder: "1231231231",
           required: true,
         },
         password: { label: "Password", type: "password", required: true },
