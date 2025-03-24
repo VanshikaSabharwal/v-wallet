@@ -133,7 +133,7 @@ export const authOptions: NextAuthOptions = {
 
     async redirect({ url, baseUrl }) {
     
-      return process.env.NEXTAUTH_URL || baseUrl;
+      return  baseUrl;
     }
     ,
   },
