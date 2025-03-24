@@ -80,6 +80,16 @@ model Otp {
   updatedAt DateTime @updatedAt
 }
 
+model Transaction {
+  id          String   @id @default(cuid())
+  paymentId   String   // Payment gateway transaction ID
+  method      String   // e.g., 'paypal', 'razorpay'
+  amount      Float
+  currency    String
+  status      String   // e.g., 'success', 'failed'
+  createdAt   DateTime @default(now())
+}
+
 enum AuthType {
   Google
   Github
