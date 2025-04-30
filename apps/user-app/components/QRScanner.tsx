@@ -6,6 +6,7 @@ import {
   BrowserQRCodeReader,
 } from "@zxing/browser";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const QRScanner = () => {
   const [scanResult, setScanResult] = useState<string | null>(null);
@@ -63,7 +64,7 @@ const QRScanner = () => {
         : `/pay?receiverId=${encodeURIComponent(userId)}`;
       router.push(query);
     } else {
-      alert("Invalid QR format. User ID missing.");
+      toast.error("Invalid QR format. User ID missing.");
     }
   };
 
@@ -86,7 +87,7 @@ const QRScanner = () => {
           handleRedirect(scannedText);
         } catch (error) {
           console.error("Failed to decode QR from image:", error);
-          alert("No QR code found in image.");
+          toast.error("No QR code found in image.");
         }
       };
     };
