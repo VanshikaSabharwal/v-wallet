@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 app = FastAPI()
 
-frontend_origin = os.getenv("FRONTEND_ORIGIN")
+frontend_origin = os.getenv("DEPLOYED_FRONTEND_URL")
 
 # Enable CORS for your frontend
 app.add_middleware(
