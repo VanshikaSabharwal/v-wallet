@@ -1,0 +1,6 @@
+{
+    "name":"chatbot",
+    "scripts": {
+        "dev":"uvicorn main:app --reload"
+    }
+}
