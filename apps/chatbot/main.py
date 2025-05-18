@@ -12,7 +12,7 @@ app = FastAPI()
 # Enable CORS for your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://v-wallet.vercel.app/"],  # frontend origin
+    allow_origins=["https://v-wallet.vercel.app"],  # frontend origin
     allow_methods=["*"],
     allow_headers=["*"],
 )
