@@ -8,12 +8,11 @@ from dotenv import load_dotenv
 load_dotenv()
 app = FastAPI()
 
-frontend_origin = os.getenv("FRONTEND_ORIGIN")
 
 # Enable CORS for your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[frontend_origin] if frontend_origin else [],  # frontend origin
+    allow_origins=["https://v-wallet.vercel.app/"],  # frontend origin
     allow_methods=["*"],
     allow_headers=["*"],
 )

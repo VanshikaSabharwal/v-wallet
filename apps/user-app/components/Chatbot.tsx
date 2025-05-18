@@ -11,7 +11,7 @@ export default function Chatbot() {
     setLoading(true);
     setAnswer("");
     try {
-      const res = await fetch("https://v-wallet-chatbot.onrender.com", {
+      const res = await fetch("https://v-wallet-chatbot.onrender.com/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
