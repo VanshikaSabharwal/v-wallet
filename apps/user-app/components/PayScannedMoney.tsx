@@ -1,23 +1,23 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/react"; 
+import { useSession } from "next-auth/react";
 import BackArrow from "./BackArrow";
 import toast from "react-hot-toast";
 
 const PaymentPage = () => {
   const searchParams = useSearchParams();
-  
+
   // Get receiverId and amount from URL parameters
   const receiverId = searchParams.get("receiverId");
   const amountFromQuery = searchParams.get("amount");
 
   // State to store the amount and ensure it's editable
   const [amount, setAmount] = useState<string>(amountFromQuery || "");
-  
+
   // Get senderId from the session (assuming you're using NextAuth)
   const { data: session } = useSession();
-  const senderId = session?.user?.id || "";  // Ensure it's a string
+  const senderId = session?.user?.id || ""; // Ensure it's a string
 
   useEffect(() => {
     // If the URL has an amount query, set it as default
@@ -56,7 +56,9 @@ const PaymentPage = () => {
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 space-y-6">
         <div className="flex items-center">
           <BackArrow />
-          <h1 className="flex-1 text-2xl font-bold text-center">Make a Payment</h1>
+          <h1 className="flex-1 text-2xl font-bold text-center">
+            Make a Payment
+          </h1>
         </div>
 
         <div>

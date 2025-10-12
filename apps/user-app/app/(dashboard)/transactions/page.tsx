@@ -49,7 +49,7 @@ async function getSelfTransaction() {
       amount: t.amount,
       status: t.status,
       provider: t.provider,
-    })
+    }),
   );
 }
 

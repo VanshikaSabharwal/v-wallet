@@ -3,8 +3,13 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 
 // Dynamically import components to avoid SSR issues
-const PayPalButton = dynamic(() => import("../../components/PayPalContainer"), { ssr: false });
-const RazorpayButton = dynamic(() => import("../../components/RazorPayButton"), { ssr: false });
+const PayPalButton = dynamic(() => import("../../components/PayPalContainer"), {
+  ssr: false,
+});
+const RazorpayButton = dynamic(
+  () => import("../../components/RazorPayButton"),
+  { ssr: false },
+);
 
 const PaymentsPage = () => {
   const [amount] = useState("10.00"); // Example amount
@@ -22,9 +27,13 @@ const PaymentsPage = () => {
   return (
     <div>
       <h1>Payments</h1>
-{/* 
+      {/* 
       <h2>Pay with Razorpay</h2> */}
-      <RazorpayButton amount={parseInt(amount, 10) * 100} currency="INR" onSuccess={handleRazorpaySuccess} />
+      <RazorpayButton
+        amount={parseInt(amount, 10) * 100}
+        currency="INR"
+        onSuccess={handleRazorpaySuccess}
+      />
     </div>
   );
 };

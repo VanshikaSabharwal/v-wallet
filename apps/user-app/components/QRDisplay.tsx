@@ -45,7 +45,10 @@ const QRDisplay = () => {
         />
       </div>
 
-      <button onClick={handleDownload} className="bg-blue-600 text-white px-4 py-2 rounded">
+      <button
+        onClick={handleDownload}
+        className="bg-blue-600 text-white px-4 py-2 rounded"
+      >
         Download QR Code
       </button>
     </div>

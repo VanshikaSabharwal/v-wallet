@@ -35,9 +35,11 @@ export default function PayClient() {
         body: JSON.stringify({ senderId, receiverId, amount }),
       });
       const { message } = await res.json();
-      toast.success(message === "Payment successful"
-        ? `₹${amount} paid!`
-        : `Error: ${message}`);
+      toast.success(
+        message === "Payment successful"
+          ? `₹${amount} paid!`
+          : `Error: ${message}`,
+      );
     } catch {
       toast.error("Payment failed.");
     }

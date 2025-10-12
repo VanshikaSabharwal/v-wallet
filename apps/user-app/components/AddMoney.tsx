@@ -21,7 +21,7 @@ const SUPPORTED_BANKS = [
 
 const AddMoney = () => {
   const [redirectUrl, setRedirectUrl] = useState(
-    SUPPORTED_BANKS[0]?.redirectUrl
+    SUPPORTED_BANKS[0]?.redirectUrl,
   );
 
   const [value, setValue] = useState(0);
@@ -63,10 +63,11 @@ const AddMoney = () => {
           <Select
             onSelect={(value) => {
               setRedirectUrl(
-                SUPPORTED_BANKS.find((x) => x.name === value)?.redirectUrl || ""
+                SUPPORTED_BANKS.find((x) => x.name === value)?.redirectUrl ||
+                  "",
               );
               setProvider(
-                SUPPORTED_BANKS.find((x) => x.name === value)?.name || ""
+                SUPPORTED_BANKS.find((x) => x.name === value)?.name || "",
               );
             }}
             options={SUPPORTED_BANKS.map((x) => ({

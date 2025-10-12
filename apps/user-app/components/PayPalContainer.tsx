@@ -7,7 +7,11 @@ interface PayPalContainerProps {
   onSuccess: (details: any) => void;
 }
 
-const PayPalContainer: React.FC<PayPalContainerProps> = ({ amount, currency, onSuccess }) => {
+const PayPalContainer: React.FC<PayPalContainerProps> = ({
+  amount,
+  currency,
+  onSuccess,
+}) => {
   return (
     <PayPalScriptProvider options={{ clientId: "YOUR_PAYPAL_CLIENT_ID" }}>
       <PayPalButton amount={amount} currency={currency} onSuccess={onSuccess} />

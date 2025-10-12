@@ -17,10 +17,20 @@ export async function POST(req: NextRequest) {
     Number.isNaN(rupees) ||
     rupees <= 0
   ) {
-    console.error("Invalid input after parsing:", { senderId, receiverId, amount, sId, rId, rupees });
+    console.error("Invalid input after parsing:", {
+      senderId,
+      receiverId,
+      amount,
+      sId,
+      rId,
+      rupees,
+    });
     return NextResponse.json(
-      { message: "Invalid input: IDs must be integers, amount must be a positive number" },
-      { status: 400 }
+      {
+        message:
+          "Invalid input: IDs must be integers, amount must be a positive number",
+      },
+      { status: 400 },
     );
   }
 
@@ -32,7 +42,7 @@ export async function POST(req: NextRequest) {
     console.warn("Sender and receiver are the same:", sId);
     return NextResponse.json(
       { message: "Sender and receiver cannot be the same" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -57,7 +67,7 @@ export async function POST(req: NextRequest) {
       console.error("Insufficient balance:", { senderBalance, amountInPaise });
       return NextResponse.json(
         { message: "Insufficient balance" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -96,7 +106,7 @@ export async function POST(req: NextRequest) {
     console.error("Payment error:", error);
     return NextResponse.json(
       { message: "Internal server error", detail: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

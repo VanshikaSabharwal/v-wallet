@@ -1,10 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import {
-  BrowserMultiFormatReader,
-  BrowserQRCodeReader,
-} from "@zxing/browser";
+import { BrowserMultiFormatReader, BrowserQRCodeReader } from "@zxing/browser";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -34,7 +31,7 @@ const QRScanner = () => {
                 handleRedirect(scannedText);
               }
               if (error) console.error("QR Scan error:", error);
-            }
+            },
           );
         }
       } catch (err) {
@@ -69,7 +66,7 @@ const QRScanner = () => {
   };
 
   const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -81,7 +78,9 @@ const QRScanner = () => {
 
       img.onload = async () => {
         try {
-          const result = await new BrowserQRCodeReader().decodeFromImageElement(img);
+          const result = await new BrowserQRCodeReader().decodeFromImageElement(
+            img,
+          );
           const scannedText = result.getText();
           setScanResult(scannedText);
           handleRedirect(scannedText);
@@ -101,7 +100,9 @@ const QRScanner = () => {
       <video ref={videoRef} style={{ width: "100%" }} />
 
       <div>
-        <label className="block font-medium mb-2">Upload a QR Code image:</label>
+        <label className="block font-medium mb-2">
+          Upload a QR Code image:
+        </label>
         <input type="file" accept="image/*" onChange={handleImageUpload} />
       </div>
 

@@ -8,7 +8,11 @@ interface RazorpayButtonProps {
   onSuccess: (response: any) => void;
 }
 
-const RazorpayButton: React.FC<RazorpayButtonProps> = ({ amount, currency, onSuccess }) => {
+const RazorpayButton: React.FC<RazorpayButtonProps> = ({
+  amount,
+  currency,
+  onSuccess,
+}) => {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
   useEffect(() => {
@@ -47,7 +51,11 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({ amount, currency, onSuc
     rzp.open();
   };
 
-  return <button onClick={handlePayment} disabled={!isScriptLoaded}>Pay with Razorpay</button>;
+  return (
+    <button onClick={handlePayment} disabled={!isScriptLoaded}>
+      Pay with Razorpay
+    </button>
+  );
 };
 
 export default RazorpayButton;

@@ -14,7 +14,7 @@ const MainPage = async () => {
         <SideBar title="Transfer" href="/transfer" icon="" />
         <SideBar title="Transactions" href="/transactions" icon="" />
         <SideBar title="P2P" href="/peer" icon="" />
-        <SideBar title="Scan To Pay" href="/scan-to-pay" icon=""/>
+        <SideBar title="Scan To Pay" href="/scan-to-pay" icon="" />
         <SideBar title="Finance Chatbot" href="/chatbot" icon="" />
       </div>
     </div>

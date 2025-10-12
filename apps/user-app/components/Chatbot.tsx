@@ -11,11 +11,14 @@ export default function Chatbot() {
     setLoading(true);
     setAnswer("");
     try {
-      const res = await fetch("https://v-wallet-chatbot.onrender.com/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
-      });
+      const res = await fetch(
+        "https://v-wallet-chatbot.onrender.com/api/chat",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question }),
+        },
+      );
       const data = await res.json();
       setAnswer(data.answer);
     } catch (error) {
@@ -26,7 +29,9 @@ export default function Chatbot() {
 
   return (
     <div className="w-full px-4 md:px-0 max-w-md md:max-w-lg lg:max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold mb-4 text-center text-pink-600">Chatbot</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-center text-pink-600">
+        Chatbot
+      </h2>
 
       <div className="flex flex-col sm:flex-row gap-2">
         <input

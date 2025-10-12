@@ -1,83 +1,128 @@
-# Turborepo starter
+# V-Wallet Turborepo Setup Guide
 
-This is an official starter Turborepo.
+This is a Turborepo setup for the V-Wallet project including `user-app`, `user-bot`, and shared packages.
 
-## Using this example
+It includes Prisma database, Next.js frontends, and scripts for building, formatting, and testing database optimizations.
 
-Run the following command:
+---
 
-```sh
-npx create-turbo@latest
+## **1. Install dependencies**
+
+From the root of the monorepo:
+
+```bash
+npm install
 ```
 
-## What's inside?
+1.1 Install Python dependencies (for chatbot)
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
+```bash
+cd apps/user-bot
+pip install -r requirements.txt
 ```
 
-### Develop
+1.2 Install Node.js dependencies for user app
 
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
+```bash
+cd ../user-app
+npm install
 ```
 
-### Remote Caching
+## **2. Setup environment variables**
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+1. Copy .env.example to .env in each relevant package:
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
+```bash
+cp .env.example .env
+cp .env.example.local .env.local
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+2. apps/chatbot .env
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
+```bash
+cd apps/chatbot
+cp .env.example .env
 ```
-npx turbo link
+
+3. apps/user-app .env
+
+```bash
+cd ../user-app
+cp .env.example .env
+cp .env.example.local .env.local
 ```
 
-## Useful Links
+## **3. Prisma Database Migration**
 
-Learn more about the power of Turborepo:
+Navigate to the database package and run migrations:
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+```bash
+cd packages/db
+npx prisma migrate dev --name init
+```
 
-Thanks to benzoix for the background. Designed by Freepik
+Replace init with a descriptive migration name for updates.
+
+## **4. Start Development Servers**
+
+User App
+
+```bash
+cd apps/user-app
+npm run dev
+```
+
+- Starts the user-app in development mode.
+- Hot-reloading enabled.
+
+Chatbot App
+
+```bash
+cd apps/chatbot
+npm run dev
+```
+
+- Start chatbot server
+
+## **5. Code Formatting**
+
+```bash
+npm run format
+```
+
+- Runs Prettier on the whole monorepo.
+- Ensures consistent styling.
+
+## **6. Test Database Indexes**
+
+```bash
+npm run test-indexes
+```
+
+- Runs a script to check performance differences before and after adding indexes.
+- Verifies that adding indexes reduces query time for large datasets.
+
+## **7. Notes**
+
+- Ensure DATABASE_URL in .env points to your PostgreSQL instance.
+
+- Indexes significantly improve query times on large tables (user, transaction, p2pTransfer).
+
+- Redis caching can be selectively added to read-heavy endpoints.
+
+- Prisma migrations automatically apply schema changes and indexes.
+
+- Test indexes using npm run test-indexes to measure performance.
+
+### Project Structure
+
+```bash
+apps/
+  user-app/       # Next.js user frontend & backend
+  user-bot/       # Chatbot backend
+packages/
+  db/             # Prisma schemas & database scripts
+  ui/             # Shared React components
+  eslint-config/  # ESLint configuration
+  typescript-config/ # Shared tsconfig
+```

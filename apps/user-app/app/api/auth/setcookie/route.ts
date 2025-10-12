@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   if (request.method !== "POST") {
     return NextResponse.json(
       { message: "Method not allowed" },
-      { status: 405 }
+      { status: 405 },
     );
   }
 
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     if (!user) {
       return NextResponse.json(
         { message: "User data is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     console.error("Error setting cookie:", error);
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

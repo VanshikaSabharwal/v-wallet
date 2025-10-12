@@ -1,13 +1,12 @@
 import React from "react";
-import Chatbot from "../../../components/Chatbot"
+import Chatbot from "../../../components/Chatbot";
 
-
-const Chat = ()=>{
-return (
+const Chat = () => {
+  return (
     <div>
-        <Chatbot />
+      <Chatbot />
     </div>
-)
-}
+  );
+};
 
 export default Chat;

@@ -63,7 +63,7 @@ export async function POST(request: Request) {
   if (!email || !phone) {
     return NextResponse.json(
       { message: "Email and phone number are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
         if (existingOtp.expiresAt > new Date()) {
           return NextResponse.json(
             { message: "OTP is still valid. Please use the existing one." },
-            { status: 200 }
+            { status: 200 },
           );
         }
       }
@@ -89,21 +89,21 @@ export async function POST(request: Request) {
       await sendOtp(email, phone);
       return NextResponse.json(
         { message: "OTP resent successfully" },
-        { status: 200 }
+        { status: 200 },
       );
     } else {
       // Send OTP for the first time or if not a resend request
       await sendOtp(email, phone);
       return NextResponse.json(
         { message: "OTP sent successfully" },
-        { status: 200 }
+        { status: 200 },
       );
     }
   } catch (error) {
     console.error(error);
     return NextResponse.json(
       { message: "Failed to send OTP" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

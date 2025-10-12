@@ -6,7 +6,6 @@ import { Session } from "next-auth";
 import { NextAuthOptions } from "next-auth";
 import { z } from "zod";
 
-
 // const TEST_EMAIL = "test@gmail.com";
 // const TEST_PHONE = "0000000000";
 // const TEST_PASSWORD = "0000000000";
@@ -59,15 +58,15 @@ export const authOptions: NextAuthOptions = {
         const { email, phone, password } = parsedCredentials.data;
 
         // Check if the provided credentials match the test credentials
-  // if (email === TEST_EMAIL && phone === TEST_PHONE && password === TEST_PASSWORD) {
-  //   console.log("Logging in with test credentials");
-  //   return {
-  //     id: "test-user",
-  //     name: "Test User",
-  //     email: TEST_EMAIL,
-  //     phone: TEST_PHONE,
-  //   };
-  // }
+        // if (email === TEST_EMAIL && phone === TEST_PHONE && password === TEST_PASSWORD) {
+        //   console.log("Logging in with test credentials");
+        //   return {
+        //     id: "test-user",
+        //     name: "Test User",
+        //     email: TEST_EMAIL,
+        //     phone: TEST_PHONE,
+        //   };
+        // }
         const hashedPassword = await bcrypt.hash(password, 10);
         const existingUser = await db.user.findFirst({
           where: {
@@ -78,7 +77,7 @@ export const authOptions: NextAuthOptions = {
         if (existingUser) {
           const passwordValidation = await bcrypt.compare(
             password,
-            existingUser.password
+            existingUser.password,
           );
           if (passwordValidation) {
             return {
@@ -132,9 +131,7 @@ export const authOptions: NextAuthOptions = {
     },
 
     async redirect({ url, baseUrl }) {
-    
-      return  baseUrl;
-    }
-    ,
+      return baseUrl;
+    },
   },
 };
