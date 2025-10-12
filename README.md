@@ -108,8 +108,6 @@ npm run test-indexes
 
 - Indexes significantly improve query times on large tables (user, transaction, p2pTransfer).
 
-- Redis caching can be selectively added to read-heavy endpoints.
-
 - Prisma migrations automatically apply schema changes and indexes.
 
 - Test indexes using npm run test-indexes to measure performance.
@@ -126,3 +124,9 @@ packages/
   eslint-config/  # ESLint configuration
   typescript-config/ # Shared tsconfig
 ```
+
+## **8. Further Optimizations**
+
+- **Read replicas**: You can set up PostgreSQL read replicas and direct frequent read requests (e.g., fetching user balances or transaction histories) to replicas to reduce load on the primary database.
+
+- **Redis caching**: Use Redis to cache frequently accessed data to further reduce database queries and improve response times.
