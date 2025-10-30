@@ -11,14 +11,11 @@ export default function Chatbot() {
     setLoading(true);
     setAnswer("");
     try {
-      const res = await fetch(
-        "https://v-wallet-chatbot.onrender.com/api/chat",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question }),
-        },
-      );
+      const res = await fetch("https://v-wallet-chatbot.onrender.com/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question }),
+      });
       const data = await res.json();
       setAnswer(data.answer);
     } catch (error) {
@@ -57,7 +54,16 @@ export default function Chatbot() {
       </div>
 
       <div className="mt-6 min-h-[80px] p-4 border border-gray-200 rounded bg-gray-50 text-gray-800 whitespace-pre-wrap">
-        {answer || "Your answer will appear here..."}
+        {loading ? (
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 bg-pink-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+            <span className="w-2 h-2 bg-pink-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+            <span className="w-2 h-2 bg-pink-500 rounded-full animate-bounce"></span>
+            <span className="ml-3 text-gray-500">Thinking...</span>
+          </div>
+        ) : (
+          answer || "Your answer will appear here..."
+        )}
       </div>
     </div>
   );
